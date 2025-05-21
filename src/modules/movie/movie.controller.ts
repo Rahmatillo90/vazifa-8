@@ -60,8 +60,6 @@ export class MovieController {
     @Body() movieDto: CreateMovieDto,
     @Req() req: Request,
   ) {
-    console.log(movieDto);
-
     const data = await this.movieService.addMovie(req.user.id, movieDto, files);
     return { data };
   }

@@ -17,8 +17,9 @@ export async function getVideoMetadata(videoPath: string): Promise<any> {
   return JSON.parse(stdout);
 }
 
-export type TQuality = 'SD' | 'HD' | 'FULLHD' | 'UHD' | 'UNKNOWN';
-export async function getVideoQuality(filePath: string): Promise<TQuality> {
+export async function getVideoQuality(
+  filePath: string,
+): Promise<'SD' | 'HD' | 'FULLHD' | 'UHD' | 'UNKNOWN'> {
   const metadata = await getVideoMetadata(filePath);
   const stream = metadata.streams.find((s: any) => s.width && s.height);
 
@@ -39,4 +40,21 @@ export async function getVideoLanguage(filePath: string): Promise<string> {
     (s: any) => s.codec_type === 'audio',
   );
   return audioStream?.tags?.language || 'uz';
+}
+
+export async function getVideoDurationInSeconds(
+  videoPath: string,
+): Promise<number> {
+  const { stdout } = await execFileAsync(ffprobePath.path, [
+    '-v',
+    'quiet',
+    '-print_format',
+    'json',
+    '-show_format',
+    videoPath,
+  ]);
+
+  const metadata = JSON.parse(stdout);
+  const durationStr = metadata.format?.duration;
+  return durationStr ? parseFloat(durationStr) : 0;
 }

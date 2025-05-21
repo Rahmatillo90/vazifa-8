@@ -5,13 +5,11 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { CreateMovieDto } from './dto/create-movie.dto';
-import { UpdateMovieDto } from './dto/update-movie.dto';
 import { DataBaseService } from 'src/core/database/database.service';
 import { MovieQueryDto } from './dto/query.dto';
 import { MovieFile, Prisma } from '@prisma/client';
 import { generateSlug } from './dto/generate-slug';
-import { getVideoQuality } from 'src/common/utils/video-meta-data';
-import { getVideoLanguage } from 'src/common/utils/video-language';
+import { getVideoLanguage, getVideoQuality } from 'src/common/utils/movie.util';
 
 @Injectable()
 export class MovieService {
@@ -156,7 +154,6 @@ export class MovieService {
           createdById: user_id,
           releaseYear: movieDto.releaseYear,
           durationSecond: movieDto.durationSecond,
-          rating: 0,
         },
         select: {
           id: true,

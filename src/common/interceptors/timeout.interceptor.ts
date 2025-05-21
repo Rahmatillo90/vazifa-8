@@ -15,7 +15,7 @@ import {
 
 @Injectable()
 export class TimeoutInterceptor implements NestInterceptor {
-  private readonly timeoutMs: number = 5000; // 5 soniya
+  private readonly timeoutMs: number = 15_000; // 15 soniya
 
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
     return next.handle().pipe(
