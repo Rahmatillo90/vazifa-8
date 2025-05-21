@@ -65,7 +65,7 @@ model UserSubscription {
   userId    String
   planId    String
   startDate DateTime           @default(now())
-  endDate   DateTime
+  endDate   DateTime?
   status    SubscriptionStatus @default(PENDING_PAYMENT)
   autoRenew Boolean            @default(false)
   createdAt DateTime           @default(now())

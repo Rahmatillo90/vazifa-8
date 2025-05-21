@@ -32,29 +32,30 @@ export class SubscriptionService {
   }
 
   async subscribe(userId: string, dto: CreateUserSubscriptionDto) {
+    const myPlan = await this.database.subscriptionPlan.findFirst({
+      where: { id: dto.planId, isActive: true },
+    });
+    if (!myPlan) throw new BadRequestException(`Invalid Subscription Plan`);
+
+    const existing = await this.database.userSubscription.findFirst({
+      where: {
+        userId,
+        endDate: { gt: new Date() },
+        status: 'ACTIVE',
+      },
+    });
+    if (existing)
+      throw new ConflictException('You already have an active subscription');
+
     try {
-      const myPlan = await this.database.subscriptionPlan.findFirst({
-        where: { id: dto.planId, isActive: true },
-      });
-      if (!myPlan) throw new BadRequestException(`Invalid Subscription Plan`);
-
-      const existing = await this.database.userSubscription.findFirst({
-        where: {
-          userId,
-          endDate: { gt: new Date() },
-          status: 'ACTIVE',
-        },
-      });
-      if (existing) {
-        throw new ConflictException('You already have an active subscription');
-      }
-
       const startDate = new Date();
-      const endDate = calculateEndDateManual(
-        startDate,
-        myPlan.duration,
-        myPlan.unit,
-      );
+      let endDate: Date | undefined = undefined;
+      if (myPlan.duration > 0 && myPlan.price > 0)
+        endDate = calculateEndDateManual(
+          startDate,
+          myPlan.duration,
+          myPlan.unit,
+        );
 
       const mySubscribe = await this.database.userSubscription.create({
         data: {

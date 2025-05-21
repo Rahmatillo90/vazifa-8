@@ -10,19 +10,20 @@ import { MovieQueryDto } from './dto/query.dto';
 import { MovieFile, Prisma } from '@prisma/client';
 import { generateSlug } from './dto/generate-slug';
 import { getVideoLanguage, getVideoQuality } from 'src/common/utils/movie.util';
+import { SubscriptionType } from 'src/common/@types/literal.enum';
 
 @Injectable()
 export class MovieService {
   constructor(private readonly database: DataBaseService) {}
 
-  async allMovies(query: MovieQueryDto) {
+  async allMovies(query: MovieQueryDto, userSubType: SubscriptionType) {
     try {
       const where: Prisma.MovieWhereInput = {
         title: query.title
           ? { contains: query.title, mode: 'insensitive' }
           : undefined,
         releaseYear: query.releaseYear,
-        subscriptionType: query.subscriptionType,
+        subscriptionType: userSubType === 'FREE' ? 'FREE' : undefined,
         files: query.language
           ? {
               some: {
@@ -83,9 +84,12 @@ export class MovieService {
     }
   }
 
-  async movieById(slug: string) {
+  async movieById(slug: string, userSubType: SubscriptionType) {
     const movie = await this.database.movie.findFirst({
-      where: { slug },
+      where: {
+        slug: slug.toLowerCase(),
+        subscriptionType: userSubType === 'FREE' ? 'FREE' : undefined,
+      },
       select: {
         id: true,
         title: true,
@@ -122,7 +126,7 @@ export class MovieService {
       },
     });
     if (movie) return movie;
-    throw new NotFoundException(`This Movie is not exist`);
+    throw new NotFoundException(`This Movie is not exist in MoviesList!`);
   }
 
   async addMovie(
@@ -133,13 +137,11 @@ export class MovieService {
       videoFiles?: Express.Multer.File[];
     },
   ) {
-    if (!files.poster || !files.poster[0]) {
+    if (!files.poster || !files.poster[0])
       throw new BadRequestException('Poster is required');
-    }
 
-    if (!files.videoFiles || files.videoFiles.length === 0) {
+    if (!files.videoFiles || files.videoFiles.length === 0)
       throw new BadRequestException('At least one video file is required');
-    }
 
     const titleSlug = await generateSlug(movieDto.title, this.database);
     try {

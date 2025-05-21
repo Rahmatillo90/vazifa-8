@@ -14,7 +14,6 @@ import { RoleGuard } from 'src/common/guards/role.guard';
 import { Roles } from 'src/common/decorator/role.decorator';
 import { ActiveSubscriptionGuard } from 'src/common/guards/active-subscription.guard';
 import { Request } from 'express';
-import { IsUUID } from 'class-validator';
 import { LikeMovieDto } from './dto/favorite.dto';
 
 @Controller('favorites')
@@ -32,9 +31,10 @@ export class FavoriteController {
 
   @Get()
   @UseGuards(ActiveSubscriptionGuard)
-  async likes(@Req() req: Request) {
+  async favorites(@Req() req: Request) {
     const data = await this.favoriteService.likes(req.user.id);
-    return { data };
+    if (data) return { data };
+    return { message: `Your favorite movies are not exist!`, data: [] };
   }
 
   @Delete(':id')

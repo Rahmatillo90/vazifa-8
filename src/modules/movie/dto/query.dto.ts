@@ -16,10 +16,6 @@ export class MovieQueryDto {
   language?: string;
 
   @IsOptional()
-  @IsIn(['FREE', 'PREMIUM'])
-  subscriptionType?: 'FREE' | 'PREMIUM';
-
-  @IsOptional()
   @IsString()
   category?: string;
 

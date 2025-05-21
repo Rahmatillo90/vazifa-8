@@ -11,6 +11,8 @@ export function calculateEndDateManual(
   switch (unit) {
     case 'DAY':
       endDate.setDate(endDate.getDate() + duration);
+      console.log(startDate);
+      console.log(endDate);
       break;
     case 'WEEK':
       endDate.setDate(endDate.getDate() + duration * 7);

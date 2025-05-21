@@ -1,10 +1,8 @@
-import { IsString, IsInt, IsNumber, Min, Max } from 'class-validator';
+import { IsString, IsInt, IsNumber, Min, Max, IsUUID } from 'class-validator';
 
 export class CreateWatchHistoryDto {
   @IsString()
-  userId: string;
-
-  @IsString()
+  @IsUUID()
   movieId: string;
 
   @IsInt()

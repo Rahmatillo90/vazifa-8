@@ -58,7 +58,7 @@ export class FavoriteService {
         }),
         total: favorite.length,
       };
-    throw new NotFoundException(`My favorite movie is not exist!`);
+    return false;
   }
 
   async dislike(id: string) {

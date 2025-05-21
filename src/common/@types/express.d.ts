@@ -6,5 +6,8 @@ namespace Express {
       email: string;
       role: string;
     };
+    subscribe: {
+      type: 'FREE' | 'PREMIUM';
+    };
   }
 }

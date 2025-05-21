@@ -6,7 +6,6 @@ import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { SubscriptionModule } from './modules/subscription/subscription.module';
 import { MovieModule } from './modules/movie/movie.module';
-import { CategoryModule } from './modules/category/category.module';
 import { FavoriteModule } from './modules/favorite/favorite.module';
 import { ReviewModule } from './modules/review/review.module';
 import { WatchHistoryModule } from './modules/watch-history/watch-history.module';
@@ -30,7 +29,6 @@ import { SuperAdminsModule } from './modules/super-admins/super-admins.module';
     AuthModule,
     SubscriptionModule,
     MovieModule,
-    CategoryModule,
     FavoriteModule,
     ReviewModule,
     WatchHistoryModule,

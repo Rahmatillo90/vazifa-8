@@ -18,7 +18,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, any> {
         if (res.message) {
           response.message = res.message;
         }
-        if (res.data) {
+        if (res.data || res.data === 0) {
           response.data = res.data;
         }
         return response;

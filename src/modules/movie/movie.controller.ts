@@ -29,16 +29,16 @@ export class MovieController {
   @Get()
   @UseGuards(ActiveSubscriptionGuard)
   @Roles('USER')
-  async movies(@Query() query: MovieQueryDto) {
-    const data = await this.movieService.allMovies(query);
+  async movies(@Query() query: MovieQueryDto, @Req() req: Request) {
+    const data = await this.movieService.allMovies(query, req.subscribe.type);
     return { data };
   }
 
-  @Get(':slug')
+  @Get('')
   @UseGuards(ActiveSubscriptionGuard)
   @Roles('USER')
-  async movieById(@Param('slug') slug: string) {
-    const movie = await this.movieService.movieById(slug);
+  async movieById(@Query('slug') slug: string, @Req() req: Request) {
+    const movie = await this.movieService.movieById(slug, req.subscribe.type);
     const data = movie ? movie : {};
     return { data };
   }
